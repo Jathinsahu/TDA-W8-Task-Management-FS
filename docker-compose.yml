@@ -1,0 +1,67 @@
+# ============================================================
+# Docker Compose - Full Stack Task Manager
+# ============================================================
+# This file defines all the services needed to run the full
+# application stack. Run with: docker-compose up -d
+#
+# Services:
+# 1. postgres   - PostgreSQL database (port 5432)
+# 2. backend    - Spring Boot API server (port 8080)
+# 3. frontend   - React development server (port 3000)
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ---------- PostgreSQL Database ----------
+  # This is the production database. In development, the backend
+  # uses H2 in-memory database instead (no setup needed).
+  postgres:
+    image: postgres:15-alpine
+    container_name: taskmanager-postgres
+    environment:
+      POSTGRES_DB: taskmanagerdb
+      POSTGRES_USER: taskmanager
+      POSTGRES_PASSWORD: taskmanager123
+    ports:
+      - "5432:5432"
+    volumes:
+      # Named volume to persist data between container restarts
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskmanager"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------- Spring Boot Backend ----------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmanager-backend
+    environment:
+      # Activate the 'docker' Spring profile to use PostgreSQL
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---------- React Frontend ----------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskmanager-frontend
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+# Named volume for PostgreSQL data persistence
+volumes:
+  postgres_data:

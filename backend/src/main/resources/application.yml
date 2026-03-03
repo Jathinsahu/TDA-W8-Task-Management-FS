@@ -1,0 +1,99 @@
+# ============================================================
+# Task Manager Application Configuration
+# ============================================================
+# This file configures the Spring Boot application.
+# By default, it uses H2 in-memory database so you can run
+# the app without any external database setup.
+# For production (Docker), use the 'docker' profile.
+# ============================================================
+
+spring:
+  application:
+    name: task-manager-backend
+
+  # ---------- Default Profile: H2 In-Memory Database ----------
+  # H2 is great for development because it requires zero setup.
+  # Data is stored in memory and resets when the app restarts.
+  datasource:
+    url: jdbc:h2:mem:taskmanagerdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # H2 Console - access at http://localhost:8080/h2-console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # ---------- JPA / Hibernate Configuration ----------
+  jpa:
+    hibernate:
+      # 'update' mode auto-creates/updates tables based on entity classes
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # ---------- Jackson JSON Configuration ----------
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+# ---------- Server Configuration ----------
+server:
+  port: 8080
+
+# ---------- JWT Configuration ----------
+# These values control how JWT tokens are created and validated
+jwt:
+  secret: mySecretKeyForJWTTokenGenerationThatIsLongEnoughToBeSecure2024TaskManager
+  access-token-expiration: 86400000    # 24 hours in milliseconds
+  refresh-token-expiration: 604800000  # 7 days in milliseconds
+
+# ---------- Logging Configuration ----------
+logging:
+  level:
+    com.taskmanager: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+
+# ---------- OpenAPI / Swagger Configuration ----------
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+---
+# ============================================================
+# Docker Profile - Uses PostgreSQL
+# ============================================================
+# Activated when running with: --spring.profiles.active=docker
+# This profile is used in the Docker Compose setup.
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/taskmanagerdb
+    driver-class-name: org.postgresql.Driver
+    username: taskmanager
+    password: taskmanager123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  h2:
+    console:
+      enabled: false

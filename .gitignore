@@ -1,0 +1,51 @@
+# ============================================================
+# .gitignore - Files and directories to exclude from Git
+# ============================================================
+
+# ---------- Java / Maven ----------
+target/
+*.class
+*.jar
+*.war
+*.log
+.mvn/
+mvnw
+mvnw.cmd
+
+# ---------- IDE Files ----------
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# ---------- Node.js / Frontend ----------
+node_modules/
+dist/
+build/
+.cache/
+*.local
+
+# ---------- Environment Files ----------
+.env
+.env.local
+.env.production
+.env.development.local
+
+# ---------- OS Files ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Docker ----------
+docker-compose.override.yml
+
+# ---------- Miscellaneous ----------
+*.bak
+*.tmp
+*.temp
+info.txt
+.qoder/
