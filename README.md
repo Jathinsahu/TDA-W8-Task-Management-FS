@@ -37,7 +37,7 @@ A complete full stack task management application built with **React TypeScript*
 | **Database** | H2 (dev), PostgreSQL (production)                       |
 | **Real-time**| WebSocket (STOMP + SockJS)                              |
 | **Auth**     | JWT (JSON Web Tokens) with refresh tokens               |
-| **DevOps**   | Docker, Docker Compose, GitHub Actions                  |
+| **DevOps**   | Docker, Docker Compose                                  |
 
 ---
 
